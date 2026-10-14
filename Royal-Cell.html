@@ -191,7 +191,7 @@ h1{letter-spacing:-.01em}
 .sh{position:relative;width:100%;height:100%;background:var(--c);-webkit-mask:var(--s) center/contain no-repeat;mask:var(--s) center/contain no-repeat}
 .sh::after{content:"";position:absolute;inset:0;background:var(--s) center/contain no-repeat;mix-blend-mode:multiply}
 .dm .ph{margin:0}
-.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:10px;margin:10px 0}
 .mb{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:6px;cursor:pointer;color:var(--muted);font:inherit;font-size:.75rem;transition:.2s}
 .mb:hover{border-color:var(--gold)}
 .mb.on{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.35);color:#fff}
@@ -225,7 +225,7 @@ h1{letter-spacing:-.01em}
       <a href="#catalogo">Catálogo</a>
       <a href="#personaliza">Personaliza</a>
       <a href="#contacto">Contacto</a>
-      <button class="btn btn-o sm" id="loginBtn">Mis datos</button>
+      <button class="btn btn-o sm" id="loginBtn">Ingresar</button>
     </div>
   </div>
 </nav>
@@ -336,7 +336,7 @@ h1{letter-spacing:-.01em}
       <div><img data-logo alt="Royal-Cell"><p style="color:var(--muted)">Fundas de celulares. Protegé tu celular con estilo.</p></div>
       <div><h4>Contacto</h4><ul>
         <li><a href="https://wa.me/595985458302" target="_blank" rel="noopener">WhatsApp: 0985 458302</a></li>
-        <li>Instagram: Royal Case</li>
+        <li>Instagram: Royal Cell</li>
         <li>Ubicación: Loma Pyta</li></ul></div>
       <div><h4>Navegación</h4><ul>
         <li><a href="#catalogo">Catálogo</a></li><li><a href="#personaliza">Personalizar</a></li><li><a href="#inicio">Inicio</a></li></ul></div>
@@ -347,20 +347,14 @@ h1{letter-spacing:-.01em}
 
 <div class="ov" id="ov"></div>
 <div class="modal" id="designM"></div>
-<div class="modal" id="authM"><button class="x" data-close>✕</button><h3>Tus datos</h3><p class="mut">Es opcional. Dejá tu nombre (y tu correo si querés) para que tu pedido salga con tus datos. Se guardan solo en este dispositivo.</p><input id="aName" placeholder="Tu nombre"><input id="aMail" type="email" placeholder="Correo (opcional)"><button class="btn btn-p" id="aGo" style="width:100%;margin-top:10px">Guardar</button></div>
+<div class="modal" id="authM"><button class="x" data-close>✕</button><h3>Iniciar sesión</h3><p class="mut">Ingresá con tu correo (Gmail) para que tus pedidos lleven tus datos.</p><input id="aName" placeholder="Tu nombre"><input id="aMail" type="email" placeholder="tucorreo@gmail.com"><button class="btn btn-p" id="aGo" style="width:100%;margin-top:10px">Ingresar</button></div>
 <aside class="drawer" id="drawer"><div style="display:flex;justify-content:space-between;align-items:center"><h3>Tu carrito</h3><button class="x" style="position:static" data-close>✕</button></div><div id="cartList"></div><button class="btn btn-p" id="checkout">Finalizar por WhatsApp</button></aside>
 <a class="wa-float" href="https://wa.me/595985458302" target="_blank" rel="noopener" aria-label="WhatsApp">WhatsApp</a>
 
 <script>
 const WA="595985458302";
-// n = nombre real del celular, s = silueta de la carcasa (0 a 13). Si una silueta no coincide, cambiá solo el número s.
-const MODELS=[
- {n:"iPhone 11",s:8},{n:"iPhone 12",s:13},{n:"iPhone 13",s:2},{n:"iPhone 14",s:2},{n:"iPhone 15",s:4},
- {n:"Samsung A14",s:12},{n:"Samsung A34",s:11},{n:"Samsung A54",s:0},{n:"Samsung S23",s:3},
- {n:"Redmi Note 11",s:10},{n:"Redmi Note 12",s:10},{n:"Redmi 12",s:6},{n:"Poco X5",s:1},
- {n:"Moto G23",s:7},{n:"Moto G54",s:9},{n:"Moto E13",s:5}
-];
-const NM=MODELS.length;
+const NM=14;
+const MODELS=Array.from({length:NM},(_,i)=>"Modelo "+String(i+1).padStart(2,"0")); // reemplazar por el nombre real de cada celular
 const items=[
  {id:1,n:"Negro",cat:"Neutros",c:"#1b1f2b",rep:5},
  {id:2,n:"Grafito",cat:"Neutros",c:"#4a5163",rep:2},
@@ -374,8 +368,8 @@ const items=[
 ];
 const $=id=>document.getElementById(id),ov=$("ov"),chips=$("chips"),grid=$("grid");
 let cart=[],user=null,sel=null,qty=1;
-try{cart=JSON.parse(localStorage.getItem("rc_cart3")||"[]");user=JSON.parse(localStorage.getItem("rc_user")||"null")}catch(e){}
-const save=()=>{try{localStorage.setItem("rc_cart3",JSON.stringify(cart));localStorage.setItem("rc_user",JSON.stringify(user))}catch(e){}};
+try{cart=JSON.parse(localStorage.getItem("rc_cart2")||"[]");user=JSON.parse(localStorage.getItem("rc_user")||"null")}catch(e){}
+const save=()=>{try{localStorage.setItem("rc_cart2",JSON.stringify(cart));localStorage.setItem("rc_user",JSON.stringify(user))}catch(e){}};
 const lum=c=>{const n=parseInt(c.slice(1),16);return .299*(n>>16)+.587*(n>>8&255)+.114*(n&255)};
 const shape=(i,c)=>`<div class="sh" style="--s:var(--m${i});--c:${c}"></div>`;
 const phH=(d,i)=>`<div class="ph ${lum(d.c)>150?"pd":"pl"}"><div class="sw">${shape(i,d.c)}</div></div>`;
@@ -394,16 +388,16 @@ addEventListener("keydown",e=>{if(e.key==="Escape")closeAll()});
 
 function openD(id){
  const d=items.find(x=>x.id===id);sel=null;qty=1;const M=$("designM"),pc=lum(d.c)>150?"pd":"pl";
- M.innerHTML=`<button class="x" data-close>✕</button><div class="dm"><div id="pv">${phH(d,d.rep)}</div><div><span class="tag">${d.cat}</span><h3 style="font-size:1.7rem">${d.n}</h3><p class="mut">Elegí el modelo de tu celular</p><div class="mgrid">${MODELS.map((m,i)=>`<button class="mb" data-i="${i}"><div class="mt ${pc}">${shape(m.s,d.c)}</div>${m.n}</button>`).join("")}</div><div class="qr"><button class="q" data-q="-1">−</button><b id="qv">1</b><button class="q" data-q="1">+</button><button class="btn btn-p" id="addB">Agregar al carrito</button></div></div></div>`;
+ M.innerHTML=`<button class="x" data-close>✕</button><div class="dm"><div id="pv">${phH(d,d.rep)}</div><div><span class="tag">${d.cat}</span><h3 style="font-size:1.7rem">${d.n}</h3><p class="mut">Elegí el modelo de tu celular</p><div class="mgrid">${MODELS.map((m,i)=>`<button class="mb" data-i="${i}"><div class="mt ${pc}">${shape(i,d.c)}</div>${m}</button>`).join("")}</div><div class="qr"><button class="q" data-q="-1">−</button><b id="qv">1</b><button class="q" data-q="1">+</button><button class="btn btn-p" id="addB">Agregar al carrito</button></div></div></div>`;
  show("designM");
  M.onclick=e=>{
   const c=e.target.closest(".mb"),q=e.target.closest(".q");
-  if(c){sel=+c.dataset.i;M.querySelectorAll(".mb").forEach(x=>x.classList.toggle("on",x===c));$("pv").innerHTML=phH(d,MODELS[sel].s)}
+  if(c){sel=+c.dataset.i;M.querySelectorAll(".mb").forEach(x=>x.classList.toggle("on",x===c));$("pv").innerHTML=phH(d,sel)}
   if(q){qty=Math.max(1,qty+ +q.dataset.q);$("qv").textContent=qty}
   if(e.target.id==="addB"){
    if(sel===null){alert("Elegí primero el modelo de tu celular");return}
    const k=d.id+"-"+sel,f=cart.find(x=>x.k===k);
-   f?f.q+=qty:cart.push({k,n:d.n,m:MODELS[sel].n,q:qty});
+   f?f.q+=qty:cart.push({k,n:d.n,m:MODELS[sel],q:qty});
    drawCart();show("drawer");
   }
  };
@@ -418,12 +412,12 @@ $("cartBtn").onclick=()=>show("drawer");
 $("checkout").onclick=()=>{
  if(!cart.length)return;
  const l=cart.map(x=>`• ${x.q} x Funda ${x.n} (${x.m})`).join("\n");
- const t=`Hola Royal-Cell! Quiero hacer este pedido${user?" (cliente: "+user.name+(user.mail?", "+user.mail:"")+")":""}:\n${l}`;
+ const t=`Hola Royal-Cell! Quiero hacer este pedido${user?" (cliente: "+user.name+", "+user.mail+")":""}:\n${l}`;
  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(t)}`,"_blank");
 };
-function authUI(){$("loginBtn").textContent=user?"Hola, "+user.name.split(" ")[0]+" · Borrar datos":"Mis datos"}
+function authUI(){$("loginBtn").textContent=user?"Hola, "+user.name.split(" ")[0]+" · Salir":"Ingresar"}
 $("loginBtn").onclick=()=>{if(user){user=null;save();authUI()}else show("authM")};
-$("aGo").onclick=()=>{const n=$("aName").value.trim(),m=$("aMail").value.trim();if(!n){alert("Ingresá tu nombre");return}if(m&&!/^\S+@\S+\.\S+$/.test(m)){alert("El correo no es válido. Podés dejarlo vacío.");return}user={name:n,mail:m};save();authUI();closeAll()};
+$("aGo").onclick=()=>{const n=$("aName").value.trim(),m=$("aMail").value.trim();if(!n||!/^\S+@\S+\.\S+$/.test(m)){alert("Ingresá tu nombre y un correo válido");return}user={name:n,mail:m};save();authUI();closeAll()};
 drawCart();authUI();
 const c3=$("c3d");for(let i=0;i<14;i++){const l=document.createElement("div");l.className="ly";l.style.transform=`translateZ(${(i-6.5)*1.5}px)`;l.style.filter=i===13?"none":`brightness(${(.42+.03*i).toFixed(2)})`;c3.appendChild(l)}
 
